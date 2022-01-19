@@ -12,6 +12,8 @@ sim = MtSimulator(
     hedge= True,
     symbols_filename=ALI_DATA_PATH
 )
+sim.download_data(['BTC/USD', 'ETH/USD', 'LTC/USD'])
+sim.save_symbols(ALI_DATA_PATH)
 
 env = MtEnv(
     original_simulator=sim,
