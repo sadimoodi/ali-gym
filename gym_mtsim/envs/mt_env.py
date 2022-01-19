@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as plt_cm
 import matplotlib.colors as plt_colors
 import plotly.graph_objects as go
-
+from sklearn.impute import SimpleImputer
 import gym
 from gym import spaces
 from gym.utils import seeding
@@ -63,7 +63,7 @@ class MtEnv(gym.Env):
         self.multiprocessing_pool = Pool(multiprocessing_processes) if multiprocessing_processes else None
 
         self.prices = self._get_prices()
-        self.signal_features = self._process_data()
+        self.signal_features = self._process_obs()
         self.features_shape = (window_size, self.signal_features.shape[1])
 
         # spaces
@@ -212,7 +212,7 @@ class MtEnv(gym.Env):
         return prices
 
 
-    def _process_data(self) -> np.ndarray:
+    def _process_obs(self) -> np.ndarray:
 
         signal_features = pd.DataFrame(index=self.original_simulator.symbols_data[self.trading_symbols[0]].index)
         np.seterr(divide='ignore', invalid='ignore')
@@ -223,8 +223,12 @@ class MtEnv(gym.Env):
            df = add_all_ta_features(df, open=symbol +':open', high=symbol+":high", low=symbol+":low", close=symbol+":close",\
                 volume=symbol+":volume",fillna=True, colprefix=symbol + ':')
            signal_features = pd.concat([df,signal_features],join='inner',axis=1)
-           
-        return signal_features.values
+
+        #Deal with NaN values as a result of applying TA
+        imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
+        imputer = imputer.fit_transform(signal_features)
+        #df = pd.DataFrame(imputer, columns=signal_features.columns.values, index=signal_features.index)   
+        return imputer #signal_features.values
 
         
 
@@ -370,6 +374,7 @@ class MtEnv(gym.Env):
         extra_info = [
             f"balance: {h['balance']:.2f} {self.simulator.unit}<br>"
             f"equity: {h['equity']:.2f} {self.simulator.unit}<br>"
+            f"step reward: {h['step_reward'] if 'step_reward' in h else ''} {self.simulator.unit}<br>"
             # f"margin: {h['margin']:.6f}<br>"
             # f"free margin: {h['free_margin']:.6f}<br>"
             # f"margin level: {h['margin_level']:.6f}"
