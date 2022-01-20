@@ -27,7 +27,7 @@ class MtEnv(gym.Env):
             self, original_simulator: MtSimulator, trading_symbols: List[str],
             window_size: int, time_points: Optional[List[datetime]]=None,
             hold_threshold: float=0.5, close_threshold: float=0.5,
-            fee: Union[float, Callable[[str], float]]=0.0005,
+            #fee: Union[float, Callable[[str], float]]=0.0005,
             symbol_max_orders: int=1, multiprocessing_processes: Optional[int]=None
         ) -> None:
 
@@ -58,7 +58,7 @@ class MtEnv(gym.Env):
         self.time_points = time_points
         self.hold_threshold = hold_threshold
         self.close_threshold = close_threshold
-        self.fee = fee
+        #self.fee = fee
         self.symbol_max_orders = symbol_max_orders
         self.multiprocessing_pool = Pool(multiprocessing_processes) if multiprocessing_processes else None
 
@@ -176,15 +176,19 @@ class MtEnv(gym.Env):
                 orders_info[symbol].update(dict(
                     error="cannot add more orders"
                 ))
+            elif modified_amount < 10:
+                orders_info[symbol].update(dict(
+                    error=f"Amount: {modified_amount:.2f} < 10"
+                ))
             elif not hold:
                 order_type = OrderType.Buy if amount > 0. else OrderType.Sell
-                fee = self.fee if type(self.fee) is float else self.fee(symbol)
+                #fee = self.fee if type(self.fee) is float else self.fee(symbol)
 
                 try:
-                    order = self.simulator.create_order(order_type, symbol, modified_amount, modified_leverage, fee)
+                    order = self.simulator.create_order(order_type, symbol, modified_amount, modified_leverage) #, fee)
                     new_info = dict(
                         order_id=order.id, order_type=order_type,
-                        fee=fee, amount=order.amount, leverage= order.leverage,
+                        amount=order.amount, leverage= order.leverage,
                     )
                 except ValueError as e:
                     new_info = dict(error=str(e))
@@ -275,7 +279,7 @@ class MtEnv(gym.Env):
         #amount = np.clip(amount, 0.01, 500)
         amount = round(amount , 2)
         #v = round(v / si.volume_step) * si.volume_step
-        return amount
+        return np.exp(amount)
 
     def _get_modified_leverage(self, symbol: str, leverage: float) -> int:
         symbol_info = self.simulator.symbols_info[symbol]
@@ -435,7 +439,7 @@ class MtEnv(gym.Env):
                         f"hold: {order['hold']}<br>"
                         f"amount: {order['amount']:.2f}<br>"
                         f"Leverage: {order['leverage']}<br>"
-                        f"fee: {order['fee']:.6f}<br>"
+                        #f"fee: {order['fee']:.6f}<br>"
                         f"error: {order['error']}"
                     )
 
@@ -459,10 +463,11 @@ class MtEnv(gym.Env):
                         info_i = (
                             f"order id: {order['order_id']}<br>"
                             f"order type: {order['order_type'].name}<br>"
-                            f"order amount: {order['amount']:.2f}<br>"
                             f"close probability: {order['close_probability']:.4f}<br>"
+                            f"order amount: {order['amount']:.2f}<br>"
                             f"leverage: {order['leverage']}<br>"
-                            f"profit: {order['profit']:.6f}"
+                            f"profit: {order['profit']:.6f}<br>"
+                            f"fee: {order['fee']:.2f}"
                         )
                         info.append(info_i)
                     info = '<br>---------------------------------<br>'.join(info)

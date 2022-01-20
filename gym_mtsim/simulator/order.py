@@ -21,7 +21,7 @@ class Order:
 
     def __init__(
         self,
-        id: int, type: OrderType, symbol: str, amount: float, leverage: int, fee: float,
+        id: int, type: OrderType, symbol: str, amount: float, leverage: int,
         entry_time: datetime, entry_price: float,
         exit_time: datetime, exit_price: float
     ) -> None:
@@ -31,7 +31,7 @@ class Order:
         self.symbol = symbol
         self.amount = amount
         self.leverage = leverage
-        self.fee = fee
+        self.fee = 0.
         self.entry_time = entry_time
         self.entry_price = entry_price
         self.exit_time = exit_time

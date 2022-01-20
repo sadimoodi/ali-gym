@@ -146,17 +146,17 @@ class MtSimulator:
         return symbol_orders
 
 
-    def create_order(self, order_type: OrderType, symbol: str, amount: float, leverage :int, fee: float=0.0005) -> Order:
+    def create_order(self, order_type: OrderType, symbol: str, amount: float, leverage :int) -> Order:
         self._check_current_time()
         #self._check_volume(symbol, volume)
-        if fee < 0.:
-            raise ValueError(f"negative fee '{fee}'")
+        # if fee < 0.:
+        #     raise ValueError(f"negative fee '{fee}'")
 
-        return self._create_hedged_order(order_type, symbol, amount, leverage, fee)
+        return self._create_hedged_order(order_type, symbol, amount, leverage)
         
 
 
-    def _create_hedged_order(self, order_type: OrderType, symbol: str, amount: float, leverage: int, fee: float) -> Order:
+    def _create_hedged_order(self, order_type: OrderType, symbol: str, amount: float, leverage: int) -> Order:
         #print ('Entered _create_hedged_order')
         order_id = len(self.closed_orders) + len(self.orders) + 1
         entry_time = self.current_time
@@ -165,7 +165,7 @@ class MtSimulator:
         exit_price = entry_price
 
         order = Order(
-            order_id, order_type, symbol, amount, leverage, fee,
+            order_id, order_type, symbol, amount, leverage,
             entry_time, entry_price, exit_time, exit_price
         )
         self._update_order_profit(order)
@@ -281,8 +281,10 @@ class MtSimulator:
         local_profit = volume * (order.type.sign * diff)
         if local_profit > 0:
             order.profit = round (local_profit * 0.9, 4) #take 10% revenue share as comission
+            order.fee = round (local_profit * 0.1, 4)
         else:
             order.profit = local_profit
+            order.fee = 0 
         #order.profit = local_profit * self._get_unit_ratio(order.symbol, order.exit_time)
 
 

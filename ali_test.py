@@ -12,8 +12,8 @@ sim = MtSimulator(
     hedge= True,
     symbols_filename=ALI_DATA_PATH
 )
-sim.download_data(['BTC/USD', 'ETH/USD', 'LTC/USD'])
-sim.save_symbols(ALI_DATA_PATH)
+# sim.download_data(['BTC/USD', 'ETH/USD', 'LTC/USD'])
+# sim.save_symbols(ALI_DATA_PATH)
 
 env = MtEnv(
     original_simulator=sim,
@@ -22,11 +22,6 @@ env = MtEnv(
     # time_points=[desired time points ...],
     hold_threshold=0.5,
     close_threshold=0.5,
-    fee=lambda symbol: {
-        'BTC/USD': max(0., np.random.normal(0.0007, 0.00005)),
-        'ETH/USD': max(0., np.random.normal(0.0002, 0.00003)),
-        'LTC/USD': max(0., np.random.normal(0.02, 0.003)),
-    }[symbol],
     symbol_max_orders=2,
     multiprocessing_processes=0
 )
@@ -38,7 +33,6 @@ env = MtEnv(
 
 # print("> signal_features.shape:", env.signal_features.shape)
 # print("> features_shape:", env.features_shape)
-
 
 
 observation = env.reset()
@@ -58,7 +52,7 @@ while True:
         )
         break
 
-state = env.render()
+#state = env.render()
 
 env.render('advanced_figure', time_format="%Y-%m-%d %H:%M:%S")
 #print (state['orders'])
