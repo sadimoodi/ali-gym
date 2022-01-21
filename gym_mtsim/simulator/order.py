@@ -31,11 +31,11 @@ class Order:
         self.symbol = symbol
         self.amount = amount
         self.leverage = leverage
+        self.volume = 0
         self.fee = 0.
         self.entry_time = entry_time
         self.entry_price = entry_price
         self.exit_time = exit_time
         self.exit_price = exit_price
         self.profit = 0.
-        self.margin = 0.
         self.closed = False

@@ -74,8 +74,8 @@ class MtEnv(gym.Env):
 
         self.observation_space = spaces.Dict({
             'balance': spaces.Box(low=-np.inf, high=np.inf, shape=(1,)),
-            'equity': spaces.Box(low=-np.inf, high=np.inf, shape=(1,)),
-            #'margin': spaces.Box(low=-np.inf, high=np.inf, shape=(1,)),
+            'PnL': spaces.Box(low=-np.inf, high=np.inf, shape=(1,)),
+            'net worth': spaces.Box(low=-np.inf, high=np.inf, shape=(1,)),
             'features': spaces.Box(low=-np.inf, high=np.inf, shape=self.features_shape),
             'orders': spaces.Box(
                 low=-np.inf, high=np.inf,
@@ -108,6 +108,7 @@ class MtEnv(gym.Env):
 
     def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, Dict[str, Any]]:
         orders_info, closed_orders_info = self._apply_action(action)
+        #print (orders_info)
 
         self._current_tick += 1
         if self._current_tick == self._end_tick:
@@ -159,7 +160,7 @@ class MtEnv(gym.Env):
                 self.simulator.close_order(order)
                 closed_orders_info[symbol].append(dict(
                     order_id=order.id, symbol=order.symbol, order_type=order.type,
-                    amount=order.amount, fee=order.fee, profit=order.profit,
+                    amount=order.amount, volume= order.volume,fee=order.fee, profit=order.profit,
                     close_probability=close_orders_probability[orders_to_close_index][j],
                     leverage=order.leverage,
                 ))
@@ -168,8 +169,7 @@ class MtEnv(gym.Env):
             orders_info[symbol] = dict(
                 order_id=None, symbol=symbol, hold_probability=hold_probability,
                 hold=hold, amount= modified_amount, capacity=orders_capacity, order_type=None,
-                leverage=None, fee=float('nan'),
-                error='', 
+                volume = float('nan'), leverage=None, fee=float('nan'),error='', 
             )
 
             if self.simulator.hedge and orders_capacity == 0:
@@ -188,7 +188,7 @@ class MtEnv(gym.Env):
                     order = self.simulator.create_order(order_type, symbol, modified_amount, modified_leverage) #, fee)
                     new_info = dict(
                         order_id=order.id, order_type=order_type,
-                        amount=order.amount, leverage= order.leverage,
+                        amount=order.amount, volume= order.volume, leverage= order.leverage,
                     )
                 except ValueError as e:
                     new_info = dict(error=str(e))
@@ -248,8 +248,8 @@ class MtEnv(gym.Env):
 
         observation = {
             'balance': np.array([self.simulator.balance]),
-            'equity': np.array([self.simulator.equity]),
-            #'margin': np.array([self.simulator.margin]),
+            'PnL': np.array([self.simulator.PnL]),
+            'net_worth': np.array([self.simulator.net_worth]),
             'features': features,
             'orders': orders,
         }
@@ -257,17 +257,17 @@ class MtEnv(gym.Env):
 
 
     def _calculate_reward(self) -> float:
-        prev_equity = self.history[-1]['equity']
-        current_equity = self.simulator.equity
-        step_reward = current_equity - prev_equity
-        return step_reward
+        prev_nt = self.history[-1]['net_worth']
+        current_nt = self.simulator.net_worth
+        step_reward = current_nt - prev_nt
+        return round (step_reward, 6)
 
 
     def _create_info(self, **kwargs: Any) -> Dict[str, Any]:
         info = {k: v for k, v in kwargs.items()}
         info['balance'] = self.simulator.balance
-        info['equity'] = self.simulator.equity
-        #info['margin'] = self.simulator.margin
+        info['PnL'] = self.simulator.PnL
+        info['net_worth'] = self.simulator.net_worth
         #info['free_margin'] = self.simulator.free_margin
         #info['margin_level'] = self.simulator.margin_level
         return info
@@ -353,7 +353,8 @@ class MtEnv(gym.Env):
 
         fig.suptitle(
             f"Balance: {self.simulator.balance:.6f} {self.simulator.unit} ~ "
-            f"Equity: {self.simulator.equity:.6f} ~ "
+            f"PnL: {self.simulator.PnL:.6f} ~ "
+            f"Net Worth: {self.simulator.net_worth:.6f} ~ "
             )
         fig.legend(loc='right')
 
@@ -377,7 +378,8 @@ class MtEnv(gym.Env):
 
         extra_info = [
             f"balance: {h['balance']:.2f} {self.simulator.unit}<br>"
-            f"equity: {h['equity']:.2f} {self.simulator.unit}<br>"
+            f"PnL: {h['PnL']:.4f} {self.simulator.unit}<br>"
+            f"net worth: {h['net_worth']:.4f} {self.simulator.unit}<br>"
             f"step reward: {h['step_reward'] if 'step_reward' in h else ''} {self.simulator.unit}<br>"
             # f"margin: {h['margin']:.6f}<br>"
             # f"free margin: {h['free_margin']:.6f}<br>"
@@ -439,7 +441,7 @@ class MtEnv(gym.Env):
                         f"hold: {order['hold']}<br>"
                         f"amount: {order['amount']:.2f}<br>"
                         f"Leverage: {order['leverage']}<br>"
-                        #f"fee: {order['fee']:.6f}<br>"
+                        f"volume: {order['volume']:.6f}<br>"
                         f"error: {order['error']}"
                     )
 
@@ -466,6 +468,7 @@ class MtEnv(gym.Env):
                             f"close probability: {order['close_probability']:.4f}<br>"
                             f"order amount: {order['amount']:.2f}<br>"
                             f"leverage: {order['leverage']}<br>"
+                            f"volume: {order['volume']:.6f}<br>"
                             f"profit: {order['profit']:.6f}<br>"
                             f"fee: {order['fee']:.2f}"
                         )
@@ -510,7 +513,8 @@ class MtEnv(gym.Env):
 
         title = (
             f"Balance: {self.simulator.balance:.2f} {self.simulator.unit} ~ "
-            f"Equity: {self.simulator.equity:.2f} ~ "
+            f"PnL: {self.simulator.PnL:.4f} ~ "
+            f"Net Worth: {self.simulator.net_worth:.4f} ~ "
             f"Closed Orders: {len(self.simulator.closed_orders)} ~ "
             f"Open Orders: {len(self.simulator.orders)}"
             # f"Margin: {self.simulator.margin:.6f} ~ "

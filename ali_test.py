@@ -7,7 +7,6 @@ from gym_mtsim import MtEnv, MtSimulator, FOREX_DATA_PATH, OrderType, ALI_DATA_P
 sim = MtSimulator(
     unit='USD',
     balance=10000.,
-    leverage=100.,
     stop_out_level=0.2,
     hedge= True,
     symbols_filename=ALI_DATA_PATH
@@ -47,7 +46,7 @@ while True:
     if done:
         # print(info)
         print(
-            f"balance: {info['balance']}, equity: {info['equity']},\n"
+            f"balance: {info['balance']}, PnL: {info['PnL']},\n"
             f"step_reward: {info['step_reward']}"
         )
         break
