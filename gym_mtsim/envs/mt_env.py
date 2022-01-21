@@ -75,7 +75,7 @@ class MtEnv(gym.Env):
         self.observation_space = spaces.Dict({
             'balance': spaces.Box(low=-np.inf, high=np.inf, shape=(1,)),
             'PnL': spaces.Box(low=-np.inf, high=np.inf, shape=(1,)),
-            'net worth': spaces.Box(low=-np.inf, high=np.inf, shape=(1,)),
+            'net_worth': spaces.Box(low=-np.inf, high=np.inf, shape=(1,)),
             'features': spaces.Box(low=-np.inf, high=np.inf, shape=self.features_shape),
             'orders': spaces.Box(
                 low=-np.inf, high=np.inf,
