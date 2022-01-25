@@ -5,7 +5,7 @@ from typing import Tuple
 
 class SymbolInfo:
 
-    def __init__(self, symbol: str, market: str, min_leverage: int, max_leverage: int, amount_step: float) -> None:
+    def __init__(self, symbol: str, market: str, min_leverage: int, max_leverage: int) -> None:
         #print ('entered the constructor of SymbolInfo')
         self.name: str = symbol
         self.market: str = market
@@ -19,7 +19,7 @@ class SymbolInfo:
 
         self.min_leverage: float = min_leverage
         self.max_leverage: float = max_leverage
-        self.amount_step: float = amount_step
+        #self.amount_step: float = amount_step
 
 
     def __str__(self) -> str:

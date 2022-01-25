@@ -7,6 +7,8 @@ import ssl, json, time
 import numpy as np
 import pandas as pd
 import urllib.request
+
+from gym_mtsim.data.cdd import CryptoDataDownload
 from ..metatrader import SymbolInfo
 #from ..envs import SymbolInfo this was my mistake, you should not import env because env is also importing simulator
 from .order import OrderType, Order
@@ -16,8 +18,9 @@ from .exceptions import SymbolNotFound, OrderNotFound
 class MtSimulator:
 
     def __init__(
-            self, unit: str='USD', balance: float=10000.,
-            stop_out_level: float=0.2, hedge: bool=True, symbols_filename: Optional[str]=None
+            self, symbols_filename :str, unit: str='USD', balance: float=10000.,
+            stop_out_level: float=0.2, hedge: bool=True, 
+            dataset: str= 'train'
         ) -> None:
 
         self.unit = unit
@@ -27,7 +30,7 @@ class MtSimulator:
         self.net_worth = balance
         self.stop_out_level = stop_out_level
         self.hedge = hedge
-
+        self.dataset = dataset
         self.symbols_info: Dict[str, SymbolInfo] = {}
         self.symbols_data: Dict[str, pd.DataFrame] = {}
         self.orders: List[Order] = []
@@ -35,7 +38,7 @@ class MtSimulator:
         self.current_time: datetime = NotImplemented
 
         if symbols_filename:
-            if not self.load_symbols(symbols_filename):
+            if not self.load_symbols(symbols_filename, dataset):
                 raise FileNotFoundError(f"file '{symbols_filename}' not found")
 
 
@@ -55,48 +58,80 @@ class MtSimulator:
         return self.balance / self.original_balance
 
     def download_data(self, symbols: List[str] ) -> None:
-        #download data from LunarCrush
-        ssl._create_default_https_context = ssl._create_unverified_context
-        api_key = "qgua98oy6jisudo4o0u3s"
-        
+        cdd= CryptoDataDownload()
+       
+        #Loop to remove duplicates and store data       
         for symbol in symbols:
-            url = "https://api.lunarcrush.com/v2?data=assets&key=" + api_key + "&symbol="+ symbol.split('/')[0] + '&data_points=720'
-            assets = json.loads(urllib.request.urlopen(url).read())
-            df = pd.json_normalize(assets, record_path=['data','timeSeries'])
-            df.index = pd.to_datetime(df['time'], unit='s')
-            time.sleep(5)
-
-            # for _ in range (20):
-            #     url = "https://api.lunarcrush.com/v2?data=assets&key=" + api_key + "&symbol="+ symbol.split('/')[0] + '&data_points=720' + '&end=' + str(int(pd.Timestamp(df.index[0]).timestamp()))
-            #     assets = json.loads(urllib.request.urlopen(url).read())
-            #     temp_df = pd.json_normalize(assets, record_path=['data','timeSeries'])
-            #     temp_df.index = pd.to_datetime(temp_df['time'], unit='s')
-            #     df = df.append(temp_df)
-            #     df = df.sort_index()
-            #     time.sleep(5)
-            
-            df['days']= df.index.day
-            df['hours'] = df.index.hour
-            df['returns']= np.log(df['close'].div(df['close'].shift(1)))
-            df['Cdirection']=np.where(df["returns"] > 0, 1, 0)
-            df = df.drop(['asset_id','search_average','time'], axis=1)
-
+            df = cdd.fetch('Bitfinex', 'USD', symbol.split('/')[0], '1h')
+            df = df.drop(df[df.index.duplicated()].index)
+            df = df.drop(df[df.duplicated()].index)
             self.symbols_data[symbol] = df
-            self.symbols_info[symbol] = SymbolInfo(symbol,'Bitfinex', 5, 300, 0.01)
+            self.symbols_info[symbol] = SymbolInfo(symbol,'Bitfinex', 5, 300)
+        
+        #time to find intersection between ALL symbols, store the first frame
+        first_df = self.symbols_data[symbols[0]]
+        
+        for symbol in symbols[1:]:
+            intersection = first_df.index.intersection(self.symbols_data[symbol].index)
+            first_df = first_df.loc[intersection]
+
+        #Apply the filter to all store symbols   
+        for symbol in symbols:
+            self.symbols_data[symbol] = self.symbols_data[symbol].loc[first_df.index]
+       
+        print ('Download completed')
+
+        # #download data from LunarCrush
+        # ssl._create_default_https_context = ssl._create_unverified_context
+        # api_key = "qgua98oy6jisudo4o0u3s"
+        
+        # for symbol in symbols:
+        #     url = "https://api.lunarcrush.com/v2?data=assets&key=" + api_key + "&symbol="+ symbol.split('/')[0] + '&data_points=720'
+        #     assets = json.loads(urllib.request.urlopen(url).read())
+        #     df = pd.json_normalize(assets, record_path=['data','timeSeries'])
+        #     df.index = pd.to_datetime(df['time'], unit='s')
+        #     time.sleep(5)
+
+        #     # for _ in range (20):
+        #     #     url = "https://api.lunarcrush.com/v2?data=assets&key=" + api_key + "&symbol="+ symbol.split('/')[0] + '&data_points=720' + '&end=' + str(int(pd.Timestamp(df.index[0]).timestamp()))
+        #     #     assets = json.loads(urllib.request.urlopen(url).read())
+        #     #     temp_df = pd.json_normalize(assets, record_path=['data','timeSeries'])
+        #     #     temp_df.index = pd.to_datetime(temp_df['time'], unit='s')
+        #     #     df = df.append(temp_df)
+        #     #     df = df.sort_index()
+        #     #     time.sleep(5)
+            
+        #     df['days']= df.index.day
+        #     df['hours'] = df.index.hour
+        #     df['returns']= np.log(df['close'].div(df['close'].shift(1)))
+        #     df['Cdirection']=np.where(df["returns"] > 0, 1, 0)
+        #     df = df.drop(['asset_id','search_average','time'], axis=1)
+
+        #     self.symbols_data[symbol] = df
+        #     self.symbols_info[symbol] = SymbolInfo(symbol,'Bitfinex', 5, 300, 0.01)
 
 
 
     def save_symbols(self, filename: str) -> None:
         with open(filename, 'wb') as file:
             pickle.dump((self.symbols_info, self.symbols_data), file)
+            print ('Data saved.')
 
 
-    def load_symbols(self, filename: str) -> bool:
+    def load_symbols(self, filename: str, dataset: str= 'train') -> bool:
         
         if not os.path.exists(filename):
             return False
         with open(filename, 'rb') as file:
             self.symbols_info, self.symbols_data = pickle.load(file)
+            
+            for symbol in self.symbols_data:
+                data_split = int(len(self.symbols_data[symbol]) * 0.7)
+                if dataset == 'train':
+                    self.symbols_data[symbol] = self.symbols_data[symbol] [:data_split]
+                else:
+                    self.symbols_data[symbol] = self.symbols_data[symbol] [data_split:]
+        print ('Data Loaded')
         return True
 
 

@@ -81,8 +81,8 @@ class CryptoDataDownload:
         if not include_all_volumes:
             df = df.drop([new_quote_vc], axis=1)
             df = df.rename({new_base_vc: "volume"}, axis=1)
-            return df[-1000:]
-        return df[-1000:]
+            return df
+        return df
 
     def fetch_gemini(self,
                      base_symbol: str,

@@ -210,19 +210,28 @@ class MtEnv(gym.Env):
                 p = list(map(get_price_at, self.time_points))
             else:
                 p = self.multiprocessing_pool.map(get_price_at, self.time_points)
-
+            
+            # for item in p:
+            #     if item.shape != (2,):
+            #         print ('shape= ', item.shape)
+            #         print (item)
             prices[symbol] = np.array(p)
 
         return prices
 
 
     def _process_obs(self) -> np.ndarray:
-
+        
         signal_features = pd.DataFrame(index=self.original_simulator.symbols_data[self.trading_symbols[0]].index)
         np.seterr(divide='ignore', invalid='ignore')
 
         for symbol in self.trading_symbols:
-           df = self.original_simulator.symbols_data[symbol]
+           df = self.original_simulator.symbols_data[symbol].copy()
+           df['days']= df.index.day
+           df['hours'] = df.index.hour
+           df['returns']= np.log(df['close'].div(df['close'].shift(1)))
+           df['Cdirection']=np.where(df["returns"] > 0, 1, 0)
+           df.dropna(inplace=True)
            df = df.add_prefix(symbol + ':')
            df = add_all_ta_features(df, open=symbol +':open', high=symbol+":high", low=symbol+":low", close=symbol+":close",\
                 volume=symbol+":volume",fillna=True, colprefix=symbol + ':')
