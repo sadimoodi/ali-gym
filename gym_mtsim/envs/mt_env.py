@@ -111,7 +111,7 @@ class MtEnv(gym.Env):
         #print (orders_info)
 
         self._current_tick += 1
-        if self._current_tick == self._end_tick or self.original_simulator.balance == 0:
+        if self._current_tick == self._end_tick or self.simulator.balance == 0:
             self._done = True
 
         dt = self.time_points[self._current_tick] - self.time_points[self._current_tick - 1]
