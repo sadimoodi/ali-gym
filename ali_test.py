@@ -1,7 +1,7 @@
 import pytz
 from datetime import datetime, timedelta
 import numpy as np
-from gym_mtsim import MtEnv, MtSimulator, FOREX_DATA_PATH, OrderType, ALI_DATA_PATH
+from gym_mtsim import MtEnv, MtSimulator, OrderType, ALI_DATA_PATH
 
 
 sim = MtSimulator(
@@ -9,9 +9,10 @@ sim = MtSimulator(
     balance=10000.,
     stop_out_level=0.2,
     hedge= True,
-    symbols_filename=ALI_DATA_PATH
+    symbols_filename=ALI_DATA_PATH,
+    dataset='test'
 )
-# sim.download_data(['BTC/USD', 'ETH/USD', 'LTC/USD'])
+sim.download_data(['BTC/USD', 'ETH/USD', 'LTC/USD'])
 # sim.save_symbols(ALI_DATA_PATH)
 
 env = MtEnv(
@@ -24,34 +25,36 @@ env = MtEnv(
     symbol_max_orders=2,
     multiprocessing_processes=0
 )
+# print (len(env.original_simulator.symbols_data['BTC/USD']))
 
-# print("env information:")
+# # print("env information:")
 
-# for symbol in env.prices:
-#     print(f"> prices[{symbol}].shape:", env.prices[symbol].shape)
+# # for symbol in env.prices:
+# #     print(f"> prices[{symbol}].shape:", env.prices[symbol].shape)
 
-# print("> signal_features.shape:", env.signal_features.shape)
-# print("> features_shape:", env.features_shape)
+# # print("> signal_features.shape:", env.signal_features.shape)
+# # print("> features_shape:", env.features_shape)
 
 
-observation = env.reset()
+# observation = env.reset()
 
-#action = env.action_space.sample()
+# #action = env.action_space.sample()
 
-while True:
-    action = env.action_space.sample()
+# while True:
+#     action = env.action_space.sample()
     
-    observation, reward, done, info = env.step(action)
+#     observation, reward, done, info = env.step(action)
     
-    if done:
-        # print(info)
-        print(
-            f"balance: {info['balance']}, PnL: {info['PnL']},\n"
-            f"step_reward: {info['step_reward']}"
-        )
-        break
+#     if done:
+#         # print(info)
+#         print(
+#             f"balance: {info['balance']}, PnL: {info['PnL']},\n"
+#             f"Net Worth: {info['net_worth']}, \n"
+#             f"step_reward: {info['step_reward']}"
+#         )
+#         break
 
-#state = env.render()
+# #state = env.render()
 
-env.render('advanced_figure', time_format="%Y-%m-%d %H:%M:%S")
-#print (state['orders'])
+# env.render('advanced_figure', time_format="%Y-%m-%d %H:%M:%S")
+# #print (state['orders'])
