@@ -131,7 +131,7 @@ class MtSimulator:
                     self.symbols_data[symbol] = self.symbols_data[symbol] [:data_split]
                 else:
                     self.symbols_data[symbol] = self.symbols_data[symbol] [data_split:]
-        print ('Data Loaded')
+        print (f'Dataset: {dataset} Loaded')
         return True
 
 
