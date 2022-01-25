@@ -231,7 +231,7 @@ class MtEnv(gym.Env):
            df['hours'] = df.index.hour
            df['returns']= np.log(df['close'].div(df['close'].shift(1)))
            df['Cdirection']=np.where(df["returns"] > 0, 1, 0)
-           #df.dropna(inplace=True)
+           df.dropna(inplace=True)
            df = df.add_prefix(symbol + ':')
            df = add_all_ta_features(df, open=symbol +':open', high=symbol+":high", low=symbol+":low", close=symbol+":close",\
                 volume=symbol+":volume",fillna=True, colprefix=symbol + ':')
@@ -288,7 +288,7 @@ class MtEnv(gym.Env):
         #amount = np.clip(amount, 0.01, 500)
         amount = round(amount , 2)
         #v = round(v / si.volume_step) * si.volume_step
-        return np.exp(amount)
+        return np.exp(amount) * 10
 
     def _get_modified_leverage(self, symbol: str, leverage: float) -> int:
         symbol_info = self.simulator.symbols_info[symbol]
