@@ -231,7 +231,7 @@ class MtEnv(gym.Env):
            df['hours'] = df.index.hour
            df['returns']= np.log(df['close'].div(df['close'].shift(1)))
            df['Cdirection']=np.where(df["returns"] > 0, 1, 0)
-           df.dropna(inplace=True)
+           #df.dropna(inplace=True)
            df = df.add_prefix(symbol + ':')
            df = add_all_ta_features(df, open=symbol +':open', high=symbol+":high", low=symbol+":low", close=symbol+":close",\
                 volume=symbol+":volume",fillna=True, colprefix=symbol + ':')
