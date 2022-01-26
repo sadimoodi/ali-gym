@@ -5,8 +5,8 @@ setup(
     version='1.1.0',
     packages=find_packages(),
 
-    author='AminHP',
-    author_email='mdan.hagh@gmail.com',
+    # author='AminHP',
+    # author_email='mdan.hagh@gmail.com',
 
     install_requires=[
         'gym>=0.19.0',
@@ -16,11 +16,11 @@ setup(
         'matplotlib>=3.4.2',
         'plotly>=5.3.1',
         'nbformat>=5.1.3',
-        'pathos>=0.2.8',
-        'MetaTrader5>=5.0.35',
+        'pathos>=0.2.8'
+        
     ],
 
-    package_data={
-        'gym_mtsim': ['data/*.pkl']
-    }
+    # package_data={
+    #     'gym_mtsim': ['data/*.pkl']
+    # }
 )
