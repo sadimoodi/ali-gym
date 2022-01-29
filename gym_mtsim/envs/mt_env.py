@@ -168,7 +168,8 @@ class MtEnv(gym.Env):
             orders_capacity = self.symbol_max_orders - (len(symbol_orders) - len(orders_to_close))
             orders_info[symbol] = dict(
                 order_id=None, symbol=symbol, hold_probability=hold_probability,
-                hold=hold, amount= modified_amount, capacity=orders_capacity, order_type=None,
+                hold=hold, amount= modified_amount, capacity=orders_capacity,
+                order_type=OrderType.Buy if amount > 0. else OrderType.Sell,
                 volume = float('nan'), leverage=None, fee=float('nan'),error='', 
             )
 

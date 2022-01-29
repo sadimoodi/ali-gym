@@ -148,13 +148,17 @@ class MtSimulator:
             self._update_order_profit(order)
             self.PnL += order.profit
             self.net_worth += order.amount + order.profit
+            #check if order profit is less than the original order amount
+            if order.amount + order.profit <= order.amount:
+                self.close_order(order)
+
 
         while self.balance_level < self.stop_out_level and len(self.orders) > 0: #self.margin_level < self.stop_out_level and 
             most_unprofitable_order = min(self.orders, key=lambda order: order.profit)
             self.close_order(most_unprofitable_order)
 
-        if self.balance < 0.:
-            self.balance = 0.
+        # if self.balance < 0.:
+        #     self.balance = 0.
             #self.equity = self.balance
 
 
@@ -196,11 +200,12 @@ class MtSimulator:
             entry_time, entry_price, exit_time, exit_price
         )
         
-        self._update_order_profit(order)
+        #removed because profit = 0 and fee = 0 at this time and there are no fees to deduct
+        #self._update_order_profit(order)
         
         if order.amount > self.balance + order.profit:
             raise ValueError(
-                f"Low free balance (order amount={order.amount}, order profit={order.profit}, "
+                f"Low free balance (order amount={order.amount},"
                 f"Balance={self.balance})"
             )
 
