@@ -157,8 +157,8 @@ class MtSimulator:
             most_unprofitable_order = min(self.orders, key=lambda order: order.profit)
             self.close_order(most_unprofitable_order)
 
-        # if self.balance < 0.:
-        #     self.balance = 0.
+        if self.balance < 0.:
+            self.balance = 0.
             #self.equity = self.balance
 
 
@@ -225,6 +225,7 @@ class MtSimulator:
         self._update_order_profit(order)
 
         self.balance += order.amount + order.profit
+        #self.PnL -= order.profit
         # print ("before:", self.PnL)
         # self.PnL = self.PnL - abs(order.profit)
         # print ('after:', self.PnL)
