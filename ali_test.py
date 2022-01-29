@@ -13,12 +13,12 @@ sim = MtSimulator(
     dataset='test'
 )
 sim.download_data(['BTC/USD', 'ETH/USD', 'LTC/USD'])
-# sim.save_symbols(ALI_DATA_PATH)
+sim.save_symbols(ALI_DATA_PATH)
 
 env = MtEnv(
     original_simulator=sim,
     trading_symbols=['BTC/USD', 'ETH/USD', 'LTC/USD'],
-    window_size=10,
+    window_size=8,
     # time_points=[desired time points ...],
     hold_threshold=0.5,
     close_threshold=0.5,
@@ -27,13 +27,13 @@ env = MtEnv(
 )
 # print (len(env.original_simulator.symbols_data['BTC/USD']))
 
-# # print("env information:")
+print("env information:")
 
-# # for symbol in env.prices:
-# #     print(f"> prices[{symbol}].shape:", env.prices[symbol].shape)
+for symbol in env.prices:
+    print(f"> prices[{symbol}].shape:", env.prices[symbol].shape)
 
-# # print("> signal_features.shape:", env.signal_features.shape)
-# # print("> features_shape:", env.features_shape)
+print("> signal_features.shape:", env.signal_features.shape)
+print("> features_shape:", env.features_shape)
 
 
 # observation = env.reset()
@@ -54,7 +54,7 @@ env = MtEnv(
 #         )
 #         break
 
-# #state = env.render()
+# state = env.render()
 
 # env.render('advanced_figure', time_format="%Y-%m-%d %H:%M:%S")
-# #print (state['orders'])
+# print (state['orders'])
