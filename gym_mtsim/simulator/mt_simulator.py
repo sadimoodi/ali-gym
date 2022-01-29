@@ -141,6 +141,7 @@ class MtSimulator:
         self.current_time += delta_time
         self.net_worth = self.balance
         self.PnL = 0.
+        #closed_orders_info = {symbol: [] for symbol in self.orders}
 
         for order in self.orders:
             order.exit_time = self.current_time
@@ -154,7 +155,6 @@ class MtSimulator:
                 self.PnL -= order.profit
             
                 
-
         while self.balance_level < self.stop_out_level and len(self.orders) > 0: #self.margin_level < self.stop_out_level and 
             most_unprofitable_order = min(self.orders, key=lambda order: order.profit)
             self.close_order(most_unprofitable_order)
