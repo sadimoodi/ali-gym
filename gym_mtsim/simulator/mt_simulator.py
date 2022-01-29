@@ -146,12 +146,12 @@ class MtSimulator:
             order.exit_time = self.current_time
             order.exit_price = self.price_at(order.symbol, order.exit_time)['close']
             self._update_order_profit(order)
-            self.PnL += order.profit
             self.net_worth += order.amount + order.profit
-            #check if order profit is less than the original order amount
+            #check if order profit is <= the original order amount
             if order.amount + order.profit <= 0:
                 self.close_order(order)
-
+            else:
+                self.PnL += order.profit
 
         while self.balance_level < self.stop_out_level and len(self.orders) > 0: #self.margin_level < self.stop_out_level and 
             most_unprofitable_order = min(self.orders, key=lambda order: order.profit)
