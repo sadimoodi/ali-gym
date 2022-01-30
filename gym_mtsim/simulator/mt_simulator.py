@@ -165,9 +165,9 @@ class MtSimulator:
             most_unprofitable_order = min(self.orders, key=lambda order: order.profit)
             self.close_order(most_unprofitable_order)
 
-        if self.balance < 0.:
-            self.balance = 0.
-            #self.equity = self.balance
+        # if self.balance < 0.:
+        #     self.balance = 0.
+        #     #self.equity = self.balance
         return closed_orders_info
 
     def nearest_time(self, symbol: str, time: datetime) -> datetime:
