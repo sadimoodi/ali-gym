@@ -135,13 +135,13 @@ class MtSimulator:
         return True
 
 
-    def tick(self, delta_time: timedelta=timedelta()) -> None:
+    def tick(self, delta_time: timedelta=timedelta()) -> Dict[str,List]:
         self._check_current_time()
 
         self.current_time += delta_time
         self.net_worth = self.balance
         self.PnL = 0.
-        #closed_orders_info = {symbol: [] for symbol in self.orders}
+        closed_orders_info = {order.symbol: [] for order in self.orders}
 
         for order in self.orders:
             order.exit_time = self.current_time
@@ -152,6 +152,12 @@ class MtSimulator:
             #check if order profit is <= the original order amount
             if order.amount + order.profit <= 0:
                 self.close_order(order)
+                closed_orders_info[order.symbol].append(dict(
+                    order_id=order.id, symbol=order.symbol, order_type=order.type,
+                    amount=order.amount, volume= order.volume,fee=order.fee, profit=order.profit,
+                    close_probability='FORCED',
+                    leverage=order.leverage,
+                ))
                 self.PnL -= order.profit
             
                 
@@ -162,7 +168,7 @@ class MtSimulator:
         if self.balance < 0.:
             self.balance = 0.
             #self.equity = self.balance
-
+        return closed_orders_info
 
     def nearest_time(self, symbol: str, time: datetime) -> datetime:
         df = self.symbols_data[symbol]
@@ -278,6 +284,9 @@ class MtSimulator:
             order.fee = round (local_profit * 0.1, 4)
         else:
             order.profit = round (local_profit , 4)
+            #check if order profit exceeds order amount in minus
+            if order.profit + order.amount < 0:
+                order.profit = - order.amount
             order.fee = 0 
 
 
