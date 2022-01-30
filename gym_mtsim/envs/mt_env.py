@@ -115,7 +115,12 @@ class MtEnv(gym.Env):
             self._done = True
 
         dt = self.time_points[self._current_tick] - self.time_points[self._current_tick - 1]
-        self.simulator.tick(dt)
+
+        forced_closed_orders= self.simulator.tick(dt)
+
+        for symbol in forced_closed_orders:
+            if forced_closed_orders[symbol]:
+                closed_orders_info[symbol].append(forced_closed_orders[symbol])
 
         step_reward = self._calculate_reward()
 
