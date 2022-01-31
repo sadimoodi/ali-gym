@@ -20,7 +20,7 @@ class MtSimulator:
     def __init__(
             self, symbols_filename :str, unit: str='USD', balance: float=10000.,
             stop_out_level: float=0.2, hedge: bool=True, 
-            dataset: str= 'train'
+            dataset: str= 'train', train_split :float=0.7
         ) -> None:
 
         self.unit = unit
@@ -31,6 +31,7 @@ class MtSimulator:
         self.stop_out_level = stop_out_level
         self.hedge = hedge
         self.dataset = dataset
+        self.train_split = train_split
         self.symbols_info: Dict[str, SymbolInfo] = {}
         self.symbols_data: Dict[str, pd.DataFrame] = {}
         self.orders: List[Order] = []
@@ -126,7 +127,7 @@ class MtSimulator:
             self.symbols_info, self.symbols_data = pickle.load(file)
             
             for symbol in self.symbols_data:
-                data_split = int(len(self.symbols_data[symbol]) * 0.7)
+                data_split = int(len(self.symbols_data[symbol]) * self.train_split)
                 if dataset == 'train':
                     self.symbols_data[symbol] = self.symbols_data[symbol] [:data_split]
                 else:
