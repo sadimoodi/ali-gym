@@ -155,7 +155,7 @@ class MtSimulator:
                 closed_orders_info[order.symbol].append(dict(
                     order_id=order.id, symbol=order.symbol, order_type=order.type,
                     amount=order.amount, volume= order.volume,fee=order.fee, profit=order.profit,
-                    close_probability='FORCED',
+                    close_probability= 99.9999,
                     leverage=order.leverage,
                 ))
                 self.PnL -= order.profit
