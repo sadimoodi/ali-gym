@@ -210,7 +210,7 @@ class MtSimulator:
         )
         
         #removed because profit = 0 and fee = 0 at this time and there are no fees to deduct
-        #self._update_order_profit(order)
+        self._update_order_profit(order)
         
         if order.amount > self.balance + order.profit:
             raise ValueError(
