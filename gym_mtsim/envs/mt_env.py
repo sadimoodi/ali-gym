@@ -240,7 +240,7 @@ class MtEnv(gym.Env):
            #df.dropna(inplace=True)
            df = df.add_prefix(symbol + ':')
            df = add_all_ta_features(df, open=symbol +':open', high=symbol+":high", low=symbol+":low", close=symbol+":close",\
-                volume=symbol+":volume",fillna=True, colprefix=symbol + ':')
+                volume=symbol+":volume",fillna=False, colprefix=symbol + ':')
            signal_features = pd.concat([df,signal_features],join='inner',axis=1)
 
         #Deal with NaN values as a result of applying TA
