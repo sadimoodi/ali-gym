@@ -3,11 +3,12 @@ from typing import List, Tuple, Dict, Any, Optional
 import os
 import pickle
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 import ssl, json, time
 import numpy as np
 import pandas as pd
 import urllib.request
-
+from polygon import RESTClient
 from gym_mtsim.data.cdd import CryptoDataDownload
 from ..metatrader import SymbolInfo
 #from ..envs import SymbolInfo this was my mistake, you should not import env because env is also importing simulator
@@ -58,29 +59,70 @@ class MtSimulator:
     def balance_level(self) -> float:
         return self.balance / self.original_balance
 
-    def download_data(self, symbols: List[str] ) -> None:
-        cdd= CryptoDataDownload()
-       
-        #Loop to remove duplicates and store data       
-        for symbol in symbols:
-            df = cdd.fetch('Bitfinex', 'USD', symbol.split('/')[0], '1h')
-            df = df.drop(df[df.index.duplicated()].index)
-            df = df.drop(df[df.duplicated()].index)
-            self.symbols_data[symbol] = df
-            self.symbols_info[symbol] = SymbolInfo(symbol,'Bitfinex', 5, 300)
+    def download_data(self, symbols: List[str], source: str='polygon', months: int=8) -> None:
         
-        #time to find intersection between ALL symbols, store the first frame
-        first_df = self.symbols_data[symbols[0]]
+        if source == 'crypto':
         
-        for symbol in symbols[1:]:
-            intersection = first_df.index.intersection(self.symbols_data[symbol].index)
-            first_df = first_df.loc[intersection]
+            cdd= CryptoDataDownload()
+            #Loop to remove duplicates and store data       
+            for symbol in symbols:
+                df = cdd.fetch('Bitfinex', 'USD', symbol.split('/')[0], '1h')
+                df = df.drop(df[df.index.duplicated()].index)
+                df = df.drop(df[df.duplicated()].index)
+                self.symbols_data[symbol] = df
+                self.symbols_info[symbol] = SymbolInfo(symbol,'Bitfinex', 5, 300)
+            
+            #time to find intersection between ALL symbols, store the first frame
+            first_df = self.symbols_data[symbols[0]]
+            
+            for symbol in symbols[1:]:
+                intersection = first_df.index.intersection(self.symbols_data[symbol].index)
+                first_df = first_df.loc[intersection]
 
-        #Apply the filter to all store symbols   
-        for symbol in symbols:
-            self.symbols_data[symbol] = self.symbols_data[symbol].loc[first_df.index]
-       
-        print ('Download completed')
+            #Apply the filter to all store symbols   
+            for symbol in symbols:
+                self.symbols_data[symbol] = self.symbols_data[symbol].loc[first_df.index]
+        
+            print (f'Downloaded {len(first_df)} candles from CryptoDataDownload')
+
+        elif source == 'polygon':
+            KEY = "TGjRG3TWCwpV02De4o_dyb1mTF2ldezs"
+            for symbol in symbols:
+                #go back x months
+                start_date = datetime.today().date() + relativedelta(months= -months)
+                df = pd.DataFrame()
+
+                for _ in range (0, months):
+                    end_date = start_date + relativedelta(months=+1) - relativedelta(days=+1)
+                    print (f'Fetching {symbol}, date from: {start_date} till: {end_date}')
+                    with RESTClient(KEY) as client:
+                        resp = client.stocks_equities_aggregates(ticker='X:'+symbol.replace('/',''),multiplier=1,timespan='minute',from_=start_date,
+                                                                to= end_date, limit=50000)
+                        temp_df = pd.DataFrame(resp.results)
+                        df = df.append(temp_df)
+                                            
+                    start_date += relativedelta(months=+1)
+                    time.sleep(20)
+
+                df.index = pd.to_datetime(df['t'],unit='ms').rename('DateTime', inplace= True)
+                df = df.sort_index()
+                df.drop(['t','vw'],axis=1,inplace=True)
+                df.columns= (['volume', 'open','close','high','low','ticks'])
+                self.symbols_data[symbol] = df
+                self.symbols_info[symbol] = SymbolInfo(symbol,'Aggregated', 5, 300)
+
+            #time to find intersection between ALL symbols, store the first frame
+            first_df = self.symbols_data[symbols[0]]
+            
+            for symbol in symbols[1:]:
+                intersection = first_df.index.intersection(self.symbols_data[symbol].index)
+                first_df = first_df.loc[intersection]
+
+            #Apply the filter to all store symbols   
+            for symbol in symbols:
+                self.symbols_data[symbol] = self.symbols_data[symbol].loc[first_df.index]
+
+            print (f'Downloaded {len(first_df)} candles from Polygon')
 
         # #download data from LunarCrush
         # ssl._create_default_https_context = ssl._create_unverified_context
@@ -130,9 +172,10 @@ class MtSimulator:
                 data_split = int(len(self.symbols_data[symbol]) * self.train_split)
                 if dataset == 'train':
                     self.symbols_data[symbol] = self.symbols_data[symbol] [:data_split]
-                else:
+                elif dataset == 'test':
                     self.symbols_data[symbol] = self.symbols_data[symbol] [data_split:]
-        print (f'Dataset: {dataset} Loaded')
+
+        print (f'Dataset: {dataset} Loaded.')
         return True
 
 
