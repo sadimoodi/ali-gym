@@ -110,6 +110,7 @@ class MtSimulator:
                 df.columns= (['volume', 'open','close','high','low','ticks'])
                 self.symbols_data[symbol] = df
                 self.symbols_info[symbol] = SymbolInfo(symbol,'Aggregated', 5, 300)
+                print ('downloaded {} of {} candles from Polygon'.format(len(df), symbol))
 
             #time to find intersection between ALL symbols, store the first frame
             first_df = self.symbols_data[symbols[0]]
@@ -122,7 +123,7 @@ class MtSimulator:
             for symbol in symbols:
                 self.symbols_data[symbol] = self.symbols_data[symbol].loc[first_df.index]
 
-            print (f'Downloaded {len(first_df)} candles from Polygon')
+            print (f'Downloaded a total of: {len(first_df)} candles from Polygon for all symbols')
 
         # #download data from LunarCrush
         # ssl._create_default_https_context = ssl._create_unverified_context
@@ -174,8 +175,10 @@ class MtSimulator:
                     self.symbols_data[symbol] = self.symbols_data[symbol] [:data_split]
                 elif dataset == 'test':
                     self.symbols_data[symbol] = self.symbols_data[symbol] [data_split:]
+                
+                print(f'Loaded {symbol} with {len(self.symbols_data[symbol])} candles')
 
-        print (f'Dataset: {dataset} Loaded.')
+        print (f'Dataset: {dataset} Loaded, , split = {self.train_split}')
         return True
 
 
