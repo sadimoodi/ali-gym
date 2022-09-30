@@ -1,0 +1,339 @@
+{
+  "cameras": [
+    {
+      "id": 1,
+      "location": "Main Door",
+      "address": "http://FaceR:W%40rec621%23@10.16.225.40/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 2,
+      "location": "GATE 3 IN L2",
+      "address": "http://FaceR:W%40rec621%23@10.16.21.152/jpg/image.jpg"
+    },
+    {
+      "id": 3,
+      "location": "GATE 3 IN L3",
+      "address": "http://FaceR:W%40rec621%23@10.16.21.153/jpg/image.jpg"
+    },
+    {
+      "id": 4,
+      "location": "GATE 3 OUT L4",
+      "address": "http://FaceR:W%40rec621%23@10.11.235.131/jpg/image.jpg"
+    },
+    {
+      "id": 5,
+      "location": "GATE 3 OUT L5",
+      "address": "http://FaceR:W%40rec621%23@10.11.235.132/jpg/image.jpg"
+    },
+    {
+      "id": 6,
+      "location": "GATE 3 OUT L6",
+      "address": "http://FaceR:W%40rec621%23@10.11.235.133/jpg/image.jpg"
+    },
+    {
+      "id": 7,
+      "location": "GATE 3 IN L1",
+      "address": "http://FaceR:W%40rec621%23@10.16.21.151/jpg/image.jpg"
+    },
+    {
+      "id": 8,
+      "location": "GATE 3 OUT L7",
+      "address": "http://FaceR:W%40rec621%23@10.11.235.134/jpg/image.jpg"
+    },
+    {
+      "id": 9,
+      "location": "CT3 test",
+      "address": "http://FaceR:W%40rec621%23@10.23.186.22/axis-cgi/jpg/image.cgi"
+    },
+    {
+      "id": 10,
+      "location": "T1 Inbound Lane-1",
+      "address": "http://FaceR:W%40rec621%23@10.11.88.65/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 11,
+      "location": "CT1 Gate 5 LV gate In",
+      "address": "http://FaceR:W%40rec621%23@10.8.202.123/axis-cgi/jpg/image.cgi"
+    },
+    {
+      "id": 12,
+      "location": "CT1 Gate 5 LV gate Out",
+      "address": "http://FaceR:W%40rec621%23@10.8.202.126/axis-cgi/jpg/image.cgi"
+    },
+    {
+      "id": 13,
+      "location": "T1Gate2inL1",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.171/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 14,
+      "location": "T1Gate2inL2",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.172/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 15,
+      "location": "T1Gate2inL3",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.173/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 16,
+      "location": "T1Gate2inL4",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.174/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 17,
+      "location": "T1Gate3L1",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.175/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 18,
+      "location": "T1Gate3L2",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.176/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 19,
+      "location": "T1Gate3L3",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.177/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 20,
+      "location": "T1Gate3L4",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.178/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 21,
+      "location": "T1Gate3OutL1",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.179/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 22,
+      "location": "T1Gate3OutL2",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.180/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 23,
+      "location": "T1Gate3OutL3",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.181/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 24,
+      "location": "T1Gate3OutL4",
+      "address": "http://FaceR:W%40rec621%23@10.11.237.182/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 25,
+      "location": "T4InL1",
+      "address": "http://FaceR:W%40rec621%23@10.6.176.60/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 26,
+      "location": "T4InL2",
+      "address": "http://FaceR:W%40rec621%23@10.6.176.61/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 27,
+      "location": "T4InL3",
+      "address": "http://FaceR:W%40rec621%23@10.6.176.62/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 28,
+      "location": "T4OutL1",
+      "address": "http://FaceR:W%40rec621%23@10.6.176.63/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 29,
+      "location": "T4OutL2",
+      "address": "http://FaceR:W%40rec621%23@10.6.176.64/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 30,
+      "location": "T4OutL3",
+      "address": "http://FaceR:W%40rec621%23@10.6.176.65/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 31,
+      "location": "T2InL1",
+      "address": "http://FaceR:W%40rec621%23@10.19.194.20/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 32,
+      "location": "T2InL2",
+      "address": "http://FaceR:W%40rec621%23@10.19.194.21/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 32,
+      "location": "T2InL3",
+      "address": "http://FaceR:W%40rec621%23@10.19.194.22/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 33,
+      "location": "T2InL4",
+      "address": "http://FaceR:W%40rec621%23@10.19.194.23/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 34,
+      "location": "T2InL5",
+      "address": "http://FaceR:W%40rec621%23@10.19.194.24/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 35,
+      "location": "T2OutL1",
+      "address": "http://FaceR:W%40rec621%23@10.19.195.20/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 36,
+      "location": "T2OutL2",
+      "address": "http://FaceR:W%40rec621%23@10.19.195.21/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 37,
+      "location": "T2OutL3",
+      "address": "http://FaceR:W%40rec621%23@10.19.195.22/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 38,
+      "location": "T2OutL4",
+      "address": "http://FaceR:W%40rec621%23@10.19.195.23/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 39,
+      "location": "T2OutL5",
+      "address": "http://FaceR:W%40rec621%23@10.19.195.24/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 40,
+      "location": "T3InL1",
+      "address": "http://FaceR:W%40rec621%23@10.23.221.82/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 41,
+      "location": "T3InL2",
+      "address": "http://FaceR:W%40rec621%23@10.23.221.83/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 42,
+      "location": "T3InL3",
+      "address": "http://FaceR:W%40rec621%23@10.23.221.84/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 43,
+      "location": "T3InL4",
+      "address": "http://FaceR:W%40rec621%23@10.23.221.85/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 44,
+      "location": "T3InL5",
+      "address": "http://FaceR:W%40rec621%23@10.23.221.86/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 45,
+      "location": "T3InL6",
+      "address": "http://FaceR:W%40rec621%23@10.23.221.87/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 46,
+      "location": "T3OutL1",
+      "address": "http://FaceR:W%40rec621%23@10.23.220.113/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 47,
+      "location": "T3OutL2",
+      "address": "http://FaceR:W%40rec621%23@10.23.220.114/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 48,
+      "location": "T3OutL3",
+      "address": "http://FaceR:W%40rec621%23@10.23.220.115/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 49,
+      "location": "T3OutL4",
+      "address": "http://FaceR:W%40rec621%23@10.23.220.116/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 50,
+      "location": "T3OutL5",
+      "address": "http://FaceR:W%40rec621%23@10.23.220.117/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 51,
+      "location": "G7InL1",
+      "address": "http://FaceR:W%40rec621%23@10.12.195.114/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 52,
+      "location": "G7InL2",
+      "address": "http://FaceR:W%40rec621%23@10.12.195.115/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 53,
+      "location": "G7OutL1",
+      "address": "http://FaceR:W%40rec621%23@10.12.195.116/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 54,
+      "location": "G7OutL2",
+      "address": "http://FaceR:W%40rec621%23@10.12.195.117/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 55,
+      "location": "G3CustomsExitL1",
+      "address": "http://FaceR:W%40rec621%23@10.11.206.40/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 56,
+      "location": "G3CustomsExitL2",
+      "address": "http://FaceR:W%40rec621%23@10.11.206.41/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 57,
+      "location": "G8InL1",
+      "address": "http://FaceR:W%40rec621%23@10.12.83.90/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 58,
+      "location": "G8InL2",
+      "address": "http://FaceR:W%40rec621%23@10.12.83.91/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 59,
+      "location": "G8OutL1",
+      "address": "http://FaceR:W%40rec621%23@10.12.83.92/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 60,
+      "location": "G8OutL2",
+      "address": "http://FaceR:W%40rec621%23@10.12.83.93/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 61,
+      "location": "G8OutL3",
+      "address": "http://FaceR:W%40rec621%23@10.12.83.94/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 62,
+      "location": "G2OutL1",
+      "address": "http://FaceR:W%40rec621%23@10.11.87.61/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 63,
+      "location": "G11InL1",
+      "address": "http://FaceR:W%40rec621%23@10.11.54.80/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 64,
+      "location": "G11InL2",
+      "address": "http://FaceR:W%40rec621%23@10.11.54.81/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 65,
+      "location": "G11OutL1",
+      "address": "http://FaceR:W%40rec621%23@10.11.54.82/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    },
+    {
+      "id": 66,
+      "location": "G11OutL2",
+      "address": "http://FaceR:W%40rec621%23@10.11.54.83/stw-cgi/video.cgi?msubmenu=snapshot&action=view"
+    }
+  ]
+}
