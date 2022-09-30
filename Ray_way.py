@@ -9,7 +9,7 @@ class imagesizes:
         self.get_images_sizes()
 
     def get_images_sizes(self):
-        for filename in os.scandir('C://Users//ali.khankan//Downloads//notebooks//Detectron//mydataset//train'):
+        for filename in os.scandir('C://Users//ali.khankan//Downloads//notebooks//Detectron//mydataset//test'):
             width, height = imagesize.get(filename.path)
             self.images[filename.name] = {'height': height, 'width': width}
 
@@ -20,7 +20,7 @@ tic = time.time()
 myimages = imagesizes.remote()
 results = ray.get(myimages.get_images.remote())
 
-with open('C://Users//ali.khankan//Downloads//notebooks//Detectron//mydataset//train//_annotations_train.json', 'r') as f:
+with open('C://Users//ali.khankan//Downloads//notebooks//Detectron//mydataset//test//test.json', 'r') as f:
     data = json.load(f)
 
 for image in data['images']:
@@ -38,6 +38,6 @@ for image in data['images']:
     
 print ('time taken: {}'.format(time.time() - tic))
 
-with open('_annotations_train.json', 'w') as outfile:
+with open('_annotations_test.json', 'w') as outfile:
     json.dump(data, outfile)
 print ('Finished, writing new JSON file.')
